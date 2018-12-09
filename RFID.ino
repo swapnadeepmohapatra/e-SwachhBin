@@ -82,6 +82,10 @@ void loop()
       Serial.println(Firebase.error());
       return;
     }
+    else
+    {
+      Firebase.setString("gar", garbageOld);
+    }
     Serial.print("pushed: /logs/");
     Serial.println(name);
   }
