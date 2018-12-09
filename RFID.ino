@@ -7,8 +7,9 @@
 #define RST_PIN 0
 #define LED_PIN 16
 
-#define FIREBASE_HOST "e-swachh.firebaseio.com"
-#define FIREBASE_AUTH "mm7omSEzR2f7m65msqn102KrqSM7Xk49TOJ1RW0m"
+#define FIREBASE_HOST "iottest-89b28.firebaseio.com"
+#define FIREBASE_AUTH "FbuIpILw3Rq4dp9DSRxpI6se23dzJbN8eUIF1SCS"
+
 #define WIFI_SSID "Swapnadeep"
 #define WIFI_PASSWORD "deep7378"
 
@@ -62,17 +63,28 @@ void loop()
   content.toUpperCase();
   Serial.println();
 
+  // Allow to get Points
   Serial.println(content.substring(1));
+  String garbageOld = Firebase.getString("gar");
+  String garbagePresent = Firebase.getString("garbage");
 
-  digitalWrite(LED_PIN, LOW);
-  String name = Firebase.pushInt(content.substring(1), n);
-  if (Firebase.failed())
+  Serial.println(garbageOld);
+  Serial.println(garbagePresent);
+
+  // Checks
+  if (garbageOld != garbagePresent)
   {
-    Serial.print("pushing /logs failed:");
-    Serial.println(Firebase.error());
-    return;
+    digitalWrite(LED_PIN, LOW);
+    String name = Firebase.pushInt(content.substring(1), n);
+    if (Firebase.failed())
+    {
+      Serial.print("pushing /logs failed:");
+      Serial.println(Firebase.error());
+      return;
+    }
+    Serial.print("pushed: /logs/");
+    Serial.println(name);
   }
-  Serial.print("pushed: /logs/");
-  Serial.println(name);
+
   delay(1000);
 }
