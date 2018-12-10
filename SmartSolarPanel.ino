@@ -1,94 +1,94 @@
 #include <Servo.h>
 
-Servo servohori;
-int servoh = 0;
-int servohLimitHigh = 160;
-int servohLimitLow = 20;
+Servo servoHorizontal;
+int servoHorizontalValue = 0;
+int servoHorizontalLimitHigh = 160;
+int servoHorizontalLimitLow = 20;
 
-Servo servoverti;
-int servov = 0;
-int servovLimitHigh = 160;
-int servovLimitLow = 20;
+Servo servoVertical;
+int servoVerticalValue = 0;
+int servoVerticalLimitHigh = 160;
+int servoVerticalLimitLow = 20;
 
-int ldrtopl = 2;
-int ldrtopr = 1;
-int ldrbotl = 3;
-int ldrbotr = 0;
+int ldrTopLeft = 2;
+int ldrTopRight = 1;
+int ldrBottomLeft = 3;
+int ldrBottomRight = 0;
 
 void setup()
 {
   Serial.begin(9600);
-  servohori.attach(7);
-  servohori.write(80);
-  servoverti.attach(8);
-  servoverti.write(80);
+  servoHorizontal.attach(7);
+  servoHorizontal.write(80);
+  servoVertical.attach(8);
+  servoVertical.write(80);
   delay(500);
 }
 
 void loop()
 {
-  servoh = servohori.read();
-  servov = servoverti.read();
+  servoHorizontalValue = servoHorizontal.read();
+  servoVerticalValue = servoVertical.read();
 
-  int topl = analogRead(ldrtopl);
-  int topr = analogRead(ldrtopr);
-  int botl = analogRead(ldrbotl);
-  int botr = analogRead(ldrbotr);
+  int topl = analogRead(ldrTopLeft);
+  int topr = analogRead(ldrTopRight);
+  int botl = analogRead(ldrBottomLeft);
+  int botr = analogRead(ldrBottomRight);
 
-  int avgtop = (topl + topr) / 10;
-  int avgbot = (botl + botr) / 10;
-  int avgleft = (topl + botl) / 10;
-  int avgright = (topr + botr) / 10;
+  int averageTop = (topl + topr) / 10;
+  int averageBottom = (botl + botr) / 10;
+  int averageLeft = (topl + botl) / 10;
+  int averageRight = (topr + botr) / 10;
 
-  Serial.println(avgtop);
-  Serial.println(avgbot);
-  Serial.println(avgleft);
-  Serial.println(avgright);
+  Serial.println(averageTop);
+  Serial.println(averageBottom);
+  Serial.println(averageLeft);
+  Serial.println(averageRight);
 
-  if (avgtop < avgbot)
+  if (averageTop < averageBottom)
   {
-    servoverti.write(servov + 1);
-    if (servov > servovLimitHigh)
+    servoVertical.write(servoVerticalValue + 1);
+    if (servoVerticalValue > servoHorizontalLimitHigh)
     {
-      servov = servovLimitHigh;
+      servoVerticalValue = servoVerticalLimitHigh;
     }
     delay(10);
   }
-  else if (avgbot < avgtop)
+  else if (averageBottom < averageTop)
   {
-    servoverti.write(servov - 1);
-    if (servov < servovLimitLow)
+    servoVertical.write(servoVerticalValue - 1);
+    if (servoVerticalValue < servoVerticalLimitLow)
     {
-      servov = servovLimitLow;
-    }
-    delay(10);
-  }
-  else
-  {
-    servoverti.write(servov);
-  }
-
-  if (avgleft > avgright)
-  {
-    servohori.write(servoh + 1);
-    if (servoh > servohLimitHigh)
-    {
-      servoh = servohLimitHigh;
-    }
-    delay(10);
-  }
-  else if (avgright > avgleft)
-  {
-    servohori.write(servoh - 1);
-    if (servoh < servohLimitLow)
-    {
-      servoh = servohLimitLow;
+      servoVerticalValue = servoVerticalLimitLow;
     }
     delay(10);
   }
   else
   {
-    servohori.write(servoh);
+    servoVertical.write(servoVerticalValue);
+  }
+
+  if (averageLeft > averageRight)
+  {
+    servoHorizontal.write(servoHorizontalValue + 1);
+    if (servoHorizontalValue > servoHorizontalLimitHigh)
+    {
+      servoHorizontalValue = servoHorizontalLimitHigh;
+    }
+    delay(10);
+  }
+  else if (averageRight > averageLeft)
+  {
+    servoHorizontal.write(servoHorizontalValue - 1);
+    if (servoHorizontalValue < servoHorizontalLimitLow)
+    {
+      servoHorizontalValue = servoHorizontalLimitLow;
+    }
+    delay(10);
+  }
+  else
+  {
+    servoHorizontal.write(servoHorizontalValue);
   }
   delay(50);
 }
